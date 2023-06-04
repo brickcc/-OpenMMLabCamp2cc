@@ -1,0 +1,2 @@
+mmdet训练了200epoch
+mmpose训练了300epoch
