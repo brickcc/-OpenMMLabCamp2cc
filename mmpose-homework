@@ -1,0 +1,28 @@
+1 数据集
+耳朵穴位关键点检测数据集，MS COCO格式，划分好了训练集和测试集，并写好了样例config配置文件
+链接: https://pan.baidu.com/s/1swTLpArj7XEDXW4d0lo7Mg 提取码: 741p
+标注人：张子豪、田文博
+
+2 我用到的一些指令
+sudo apt --fix-broken install
+sudo apt install unzip
+unzip data/Ear210_Dataset_coco.zip -d data >> /dev/null
+rm -rf data/Ear210_Dataset_coco.zip
+
+# 训练mmdet
+python tools/train.py data/rtmdet_tiny_ear.py  # 参数设置啥的都在配置config文件里
+
+# 训练mmpose
+python tools/train.py data/rtmpose-s-ear.py
+
+# 测试det
+python tools/test.py data/rtmdet_tiny_ear.py work_dirs/rtmdet_tiny_ear/epoch_200.pth
+
+# 测试pose
+python tools/test.py data/rtmpose-s-ear.py work_dirs/rtmpose-s-ear/epoch_300.pth
+
+# 预测图片指令
+python demo/topdown_demo_with_mmdet.py data/rtmdet_tiny_ear.py checkpoint/epoch_200.pth data/rtmpose-s-ear.py checkpoint/epoch_300.pth --input data/test_ear/ear1.jpg --output-root outputs/G2_RTMDet-RTMPose --device cuda:0 --bbox-thr 0.5 --kpt-thr 0.5 --nms-thr 0.3 --radius 12 --thickness 4 --draw-bbox --draw-heatmap --show-kpt-idx
+
+# 预测视频指令（没有加可视化指令）
+python demo/topdown_demo_with_mmdet.py data/rtmdet_tiny_ear.py checkpoint/epoch_200.pth data/rtmpose-s-ear.py checkpoint/epoch_300.pth --input data/test_ear/ear2.mp4 --output-root outputs/G2_RTMDet-RTMPose --device cuda:0 --bbox-thr 0.5 --kpt-thr 0.5 --nms-thr 0.3 --radius 12 --thickness 6 --draw-bbox  --show-kpt-idx
